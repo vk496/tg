@@ -1,3 +1,4 @@
 [submodule "tgl"]
 	path = tgl
-	url = https://github.com/vysheng/tgl.git
+	url = https://github.com/vk496/tgl.git
+	branch = endian
