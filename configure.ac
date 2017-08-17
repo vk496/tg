@@ -48,7 +48,17 @@ AC_ARG_ENABLE(openssl,[  --disable-openssl	  disables OpenSSL, and don't link ag
   ])
 AX_CHECK_ZLIB(, [AC_MSG_ERROR([No zlib found])])
 
-AC_CHECK_LIB([readline], [rl_save_prompt], [ EXTRA_LIBS="${EXTRA_LIBS} -lreadline" ; ], [AC_MSG_ERROR([no libreadline found])])
+#AC_CHECK_LIB([readline], [rl_save_prompt], [ EXTRA_LIBS="${EXTRA_LIBS} -lreadline" ; ], [AC_MSG_ERROR([no libreadline found])])
+
+AC_CHECK_LIB([readline], [rl_save_prompt], [ EXTRA_LIBS="${EXTRA_LIBS} -lreadline" ; ], 
+    [
+        #Try if need ncruses to use readline
+        AC_CHECK_LIB([ncurses], [tputs], EXTRA_LIBS="${EXTRA_LIBS} -lreadline -lncurses",
+        [
+            AC_MSG_ERROR([no libreadline found])
+        ])
+
+    ])
 
 AC_MSG_CHECKING([for libconfig])
 AC_ARG_ENABLE(libconfig,[--enable-libconfig/--disable-libconfig],
@@ -183,8 +193,10 @@ AC_TYPE_UID_T
 AC_C_INLINE
 
 # Checks for library functions.
-AC_FUNC_MALLOC
-AC_FUNC_REALLOC
+#AC_FUNC_MALLOC
+AC_CHECK_FUNCS([malloc]) 
+#AC_FUNC_REALLOC
+AC_CHECK_FUNCS([realloc]) 
 AC_CHECK_FUNCS([alarm endpwent memset memmove mkdir select socket strdup strndup uname])
 
 AX_GCC_BUILTIN(__builtin_bswap32)
