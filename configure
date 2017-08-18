@@ -621,6 +621,8 @@ ac_includes_default="\
 
 ac_subst_vars='LTLIBOBJS
 LIBOBJS
+PREFIX_BUILD
+CROSS_COMPILE_BUILD
 EXTRA_LIBS
 PYTHON_CFLAGS
 PYTHON_LIBS
@@ -3493,14 +3495,17 @@ ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
-PREFIX=${prefix}
+#TODO do it better...
+PREFIX_BUILD=${prefix}
+CROSS_COMPILE_BUILD=${build}
+
 if [ "x$cross_compiling" = "xno" ]; then
-    PREFIX="/usr/local"
+    PREFIX_BUILD="/usr/local"
 fi
 
 # BSD locations for headers and libraries from packages, Linux locations for self-compiled stuff.
-CPPFLAGS="$CPPFLAGS -I${PREFIX}/include"
-LDFLAGS="$LDFLAGS -L${PREFIX}/lib"
+CPPFLAGS="$CPPFLAGS -I${PREFIX_BUILD}/include"
+LDFLAGS="$LDFLAGS -L${PREFIX_BUILD}/lib"
 
 #Backup variables
 CPPFLAGS_BUILD=$CPPFLAGS
@@ -6928,6 +6933,8 @@ cat >>confdefs.h <<_ACEOF
 _ACEOF
 
 fi
+
+
 
 
 

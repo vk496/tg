@@ -13,14 +13,16 @@ m4_include([m4-ax_gcc_builtin.m4])
 AC_PROG_CC
 
 #TODO do it better...
-PREFIX=${prefix}
+PREFIX_BUILD=${prefix}
+CROSS_COMPILE_BUILD=${build}
+
 if [[ "x$cross_compiling" = "xno" ]]; then
-    PREFIX="/usr/local"
+    PREFIX_BUILD="/usr/local"
 fi
 
 # BSD locations for headers and libraries from packages, Linux locations for self-compiled stuff.
-CPPFLAGS="$CPPFLAGS -I${PREFIX}/include"
-LDFLAGS="$LDFLAGS -L${PREFIX}/lib"
+CPPFLAGS="$CPPFLAGS -I${PREFIX_BUILD}/include"
+LDFLAGS="$LDFLAGS -L${PREFIX_BUILD}/lib"
 
 #Backup variables
 CPPFLAGS_BUILD=$CPPFLAGS
@@ -216,6 +218,8 @@ AC_CHECK_FUNCS([alarm endpwent memset memmove mkdir select socket strdup strndup
 AX_GCC_BUILTIN(__builtin_bswap32)
 
 AC_SUBST(EXTRA_LIBS)
+AC_SUBST(CROSS_COMPILE_BUILD)
+AC_SUBST(PREFIX_BUILD)
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT
 
