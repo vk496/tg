@@ -12,9 +12,19 @@ m4_include([m4-ax_gcc_builtin.m4])
 # Checks for programs.
 AC_PROG_CC
 
+#TODO do it better...
+PREFIX=${prefix}
+if [[ "x$cross_compiling" = "xno" ]]; then
+    PREFIX="/usr/local"
+fi
+
 # BSD locations for headers and libraries from packages, Linux locations for self-compiled stuff.
-CPPFLAGS="$CPPFLAGS -I/usr/local/include"
-LDFLAGS="$LDFLAGS -L/usr/local/lib"
+CPPFLAGS="$CPPFLAGS -I${PREFIX}/include"
+LDFLAGS="$LDFLAGS -L${PREFIX}/lib"
+
+#Backup variables
+CPPFLAGS_BUILD=$CPPFLAGS
+LDFLAGS_BUILD=$LDFLAGS
 
 # Checks for libraries.
 AC_SEARCH_LIBS([clock_gettime], [rt])
@@ -47,6 +57,10 @@ AC_ARG_ENABLE(openssl,[  --disable-openssl	  disables OpenSSL, and don't link ag
   AX_CHECK_OPENSSL(,[AC_MSG_ERROR([No openssl found. With --disable-openssl, libtgl will use libgcrypt instead.])])
   ])
 AX_CHECK_ZLIB(, [AC_MSG_ERROR([No zlib found])])
+
+#TODO AX_CHECK_ZLIB replace flags. Mustnt do it
+CPPFLAGS=$CPPFLAGS_BUILD
+LDFLAGS=$LDFLAGS_BUILD
 
 #AC_CHECK_LIB([readline], [rl_save_prompt], [ EXTRA_LIBS="${EXTRA_LIBS} -lreadline" ; ], [AC_MSG_ERROR([no libreadline found])])
 

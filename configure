@@ -2519,7 +2519,7 @@ ac_config_headers="$ac_config_headers config.h"
 
 
 # ===========================================================================
-#       http://www.gnu.org/software/autoconf-archive/ax_check_zlib.html
+#      https://www.gnu.org/software/autoconf-archive/ax_check_zlib.html
 # ===========================================================================
 #
 # SYNOPSIS
@@ -2567,7 +2567,7 @@ ac_config_headers="$ac_config_headers config.h"
 #   Public License for more details.
 #
 #   You should have received a copy of the GNU General Public License along
-#   with this program. If not, see <http://www.gnu.org/licenses/>.
+#   with this program. If not, see <https://www.gnu.org/licenses/>.
 #
 #   As a special exception, the respective Autoconf Macro's copyright owner
 #   gives unlimited permission to copy, distribute and modify the configure
@@ -2582,7 +2582,7 @@ ac_config_headers="$ac_config_headers config.h"
 #   modified version of the Autoconf Macro, you may extend this special
 #   exception to the GPL to apply to your modified version as well.
 
-#serial 14
+#serial 15
 
 # This is what autoupdate's m4 run will expand.  It fires
 # the warning (with _au_warn_XXX), outputs it into the
@@ -3493,9 +3493,18 @@ ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
+PREFIX=${prefix}
+if [ "x$cross_compiling" = "xno" ]; then
+    PREFIX="/usr/local"
+fi
+
 # BSD locations for headers and libraries from packages, Linux locations for self-compiled stuff.
-CPPFLAGS="$CPPFLAGS -I/usr/local/include"
-LDFLAGS="$LDFLAGS -L/usr/local/lib"
+CPPFLAGS="$CPPFLAGS -I${PREFIX}/include"
+LDFLAGS="$LDFLAGS -L${PREFIX}/lib"
+
+#Backup variables
+CPPFLAGS_BUILD=$CPPFLAGS
+LDFLAGS_BUILD=$LDFLAGS
 
 # Checks for libraries.
 
@@ -4584,6 +4593,10 @@ $as_echo "#define HAVE_LIBZ 1" >>confdefs.h
   fi
 fi
 
+
+#TODO AX_CHECK_ZLIB replace flags. Mustnt do it
+CPPFLAGS=$CPPFLAGS_BUILD
+LDFLAGS=$LDFLAGS_BUILD
 
 #AC_CHECK_LIB([readline], [rl_save_prompt], [ EXTRA_LIBS="${EXTRA_LIBS} -lreadline" ; ], [AC_MSG_ERROR([no libreadline found])])
 
