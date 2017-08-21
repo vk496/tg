@@ -8,7 +8,8 @@ GENERATE_OBJECTS=${OBJ}/generate.o
 TGL_COMMON_OBJECTS=${OBJ}/tools.o ${OBJ}/crypto/rand_openssl.o ${OBJ}/crypto/rand_altern.o ${OBJ}/crypto/err_openssl.o ${OBJ}/crypto/err_altern.o
 TGL_OBJ_C=${GENERATE_OBJECTS} ${TGL_COMMON_OBJECTS} ${TGL_OBJECTS} ${TLD_OBJECTS}
 
-TGL_GENERATE= ${GENERATE_OBJECTS} ${TGL_COMMON_OBJECTS} 
+# TGL_GENERATE=${OBJ}/generate.native.o ${OBJ}/tools.native.o ${OBJ}/crypto/rand_openssl.native.o ${OBJ}/crypto/rand_altern.native.o ${OBJ}/crypto/err_openssl.native.o ${OBJ}/crypto/err_altern.native.o
+TGL_GENERATE=$(subst .o,.native.o,$(GENERATE_OBJECTS)) $(subst .o,.native.o,$(TGL_COMMON_OBJECTS))
 
 ifdef CROSS_COMPILE_BUILD
 	CC_BUILD = $(CROSS_COMPILE_BUILD)-gcc
@@ -29,9 +30,6 @@ dump-tl: ${EXE}/dump-tl-file
 
 ${TGL_OBJECTS}: ${AUTO}/constants.h ${AUTO}/auto-skip.h ${AUTO}/auto-fetch.h ${AUTO}/auto-store.h ${AUTO}/auto-autocomplete.h ${AUTO}/auto-types.h ${AUTO}/auto-fetch-ds.h ${AUTO}/auto-free-ds.h ${AUTO}/auto-store-ds.h ${AUTO}/auto-print-ds.h
 
-${TGL_GENERATE}: ${OBJ}/%.o: ${srcdir}/tgl/%.c | create_dirs
-	${CC_BUILD} ${INCLUDE} ${COMPILE_FLAGS_BUILD} -iquote ${srcdir}/tgl -c -MP -MD -MF ${DEP}/$*.d -MQ ${OBJ}/$*.o -o $@ $<
-
 ${TGL_OBJ_C}: ${OBJ}/%.o: ${srcdir}/tgl/%.c | create_dirs
 	${CC} ${INCLUDE} ${COMPILE_FLAGS} -iquote ${srcdir}/tgl -c -MP -MD -MF ${DEP}/$*.d -MQ ${OBJ}/$*.o -o $@ $<
 
@@ -44,6 +42,9 @@ ${TGL_OBJECTS_AUTO}: ${OBJ}/auto/%.o: ${AUTO}/%.c | create_dirs
 ${LIB}/libtgl.a: ${TGL_OBJECTS} ${TGL_COMMON_OBJECTS} ${TGL_OBJECTS_AUTO}
 	rm -f $@ && ar ruv $@ $^
 
+${TGL_GENERATE}: ${OBJ}/%.native.o: ${srcdir}/tgl/%.c | create_dirs
+	${CC_BUILD} ${INCLUDE} ${COMPILE_FLAGS_BUILD} -iquote ${srcdir}/tgl -c -MP -MD -MF ${DEP}/$*.native.d -MQ ${OBJ}/$*.native.o -o $@ $<
+	
 ${EXE}/generate: ${TGL_GENERATE}
 	${CC_BUILD} ${TGL_GENERATE} ${LINK_FLAGS_BUILD} -o $@
 
